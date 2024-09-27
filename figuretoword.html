@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converting figure to words</title>
+</head>
+<body>
+   <input id="input" type="number" id="iput"> 
+   <button onclick="go()">go</button>
+</body>
+<!-- <script src="./jalikoafigurestowords.min.js"></script> -->
+<script>
+    let unit = 0;
+    const word = document.getElementById('input');
+    let words = [];
+    function go(){
+        let wor = getWords(word.value);
+        alert(wor);
+    }
+    function getWords(input){
+        words = [];
+        const numberRegexp = /^[\d]+$/;
+        if(!numberRegexp.test(input)){
+            return;
+        } 
+        const data = input.split('');
+        const returnedInput = groupData(data,input);
+        return convert(returnedInput,data);} function groupData(data,input){
+            if(data.length < 2){
+            const splitedValues = ['00'+input];
+            return splitedValues;
+        }     
+        if(data.length < 3){
+            const splitedValues = ['0'+input];
+            return splitedValues;
+        } 
+        if(data.length < 4){
+            const splitedValues = [input];
+            return splitedValues;
+        } 
+        if (data.length < 5){
+            const splitedValues = ['00'+input.substr(0,data.length-3),input.substr(data.length-3,data.length)];
+            return splitedValues;
+        } 
+        if (data.length < 6){
+            const splitedValues = ['0'+input.substr(0,data.length-3),input.substr(data.length-3,data.length)];
+            return splitedValues;
+        } 
+        if (data.length < 7){
+            const splitedValues = [input.substr(0,data.length-3),input.substr(data.length-3,data.length)];
+            return splitedValues;
+        } else {
+            alert('Sorry a number more than one million is beyond our reach to convert to words');
+        }
+            return;
+    }
+
+
+    function convert(digits,data){
+        for(i = 0;i < digits.length;i++){
+            change(digits[i],i,data);
+        }
+        const results=words.join(' ');
+        return results;
+    }
+function change(numerals,position,data){
+    const values = numerals.split('');
+    if(values[0] == 1){
+        words.push('one');
+    }
+    if(values[0] == 2){
+        words.push('two');
+    }
+    if(values[0] == 3){
+        words.push('three');
+    }
+    if(values[0] == 4){
+        words.push('four');
+    }
+    if(values[0] == 5){
+        words.push('five');
+    }
+    if(values[0] == 6){
+        words.push('six');
+    }
+    if(values[0] == 7){
+        words.push('seven');
+    }
+    if(values[0] == 8){
+        words.push('eight');
+    }
+    if(values[0] == 9){
+        words.push('nine');
+    }
+    if(values[0] != 0){
+        words.push('hundred');
+    } 
+    if (values[0] != 0 && values[1] > 0 || values[0] != 0 && values[2] > 0){
+        words.push('and');
+    }
+    if(values[1] == 1  && values[2] == 0){
+        words.push('ten');
+    }
+    if(values[1] == 1  && values[2] == 1){
+        words.push('eleven');
+    }
+    if(values[1] == 1  && values[2] == 2){
+        words.push('twelve');
+    }
+    if(values[1] == 1  && values[2] == 3){
+        words.push('thirteen');
+    }
+    if(values[1] == 1  && values[2] == 4){
+        words.push('fourteen');
+    }
+    if(values[1] == 1  && values[2] == 5){
+        words.push('fifteen');
+    }
+    if(values[1] == 1  && values[2] == 6){
+        words.push('sixteen');
+    }
+    if(values[1] == 1  && values[2] == 7){
+        words.push('seventen');
+    }
+    if(values[1] == 1  && values[2] == 8){
+        words.push('eighteen');
+    }
+    if(values[1] == 1  && values[2] == 9){
+        words.push('nineteen');
+    }
+    if(values[1] == 2){
+        words.push('twenty');
+    }
+    if(values[1] == 3){
+        words.push('thirty');
+    }
+    if(values[1] == 4){
+        words.push('forty');
+    }
+    if(values[1] == 5){
+        words.push('fifty');
+    }
+    if(values[1] == 6){
+        words.push('sixty');
+    }
+    if(values[1] == 7){
+        words.push('seventy');
+    }
+    if(values[1] == 8){
+        words.push('eighty');
+    }
+    if(values[1] == 9){
+        words.push('ninety');
+    }
+    if(values[2] == 1 && values[1] != 1){
+        words.push('one');
+    }
+    if(values[2] == 2 && values[1] != 1){
+        words.push('two');
+    }
+    if(values[2] == 3 && values[1] != 1){
+        words.push('three');
+    }
+    if(values[2] == 4 && values[1] != 1){
+        words.push('four');
+    }
+    if(values[2] == 5 && values[1] != 1){
+        words.push('five');
+    }
+    if(values[2] == 6 && values[1] != 1){
+        words.push('six');
+    }
+    if(values[2] == 7 && values[1] != 1){
+        words.push('seven');
+    }
+    if(values[2] == 8 && values[1] != 1){
+        words.push('eight');
+    }
+    if(values[2] == 9 && values[1] != 1){
+        words.push('nine');
+    }
+    if (position == 0 && data.length > 3){
+        words.push('thousand');
+    }
+    console.log(words);
+    
+}
+
+
+</script>
+</html>

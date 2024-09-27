@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalsoft school management system signup page</title>
+</head>
+<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="./assets/css/style.css">
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                <img src="./assets/img/logo.png" style="width: 80px;">
+            </div>
+            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                <h2 class="text-muted text-primary">Signup Page</h2>
+            </div>
+            <div class="col-xs col-sm-6 col-md-6 col-lg-6 col-xl-6 student-card">
+                <form method="post" id="form" action="./backend/registeruser.php" role="form">
+                    <br>
+                    <h4 class="text-primary">Welcome to Lake wood Academy</h4>
+                    <br>
+                    <label for="name">Your name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="username" id="name" placeholder="Joe Doe" required >
+                    </div>
+                    <br>
+                    <label for="email">Your Email</label>
+                    <div class="input-group">
+                        <input type="email" class="form-control" name="useremail" id="email" placeholder="email@email.email" required >
+                    </div>
+                    <br>
+                    <label for="admNo">Your Registration No</label>
+                    <div class="input-group">
+                        <input type="tel" class="form-control" id="admNo" name="useradmno" placeholder="LK-0000" required >
+                    </div>
+                    <br>
+                    <label for="contact">Your contact</label>
+                    <div class="input-group">
+                        <input type="tel" class="form-control" id="contact" name="usercontact" placeholder="+2547 xx xxx xxx" required >
+                    </div>
+                    <br>
+                    <label for="gender">Your gender</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="gender" name="usergender" placeholder="Male or Female" required >
+                    </div>
+                    <br>
+                    <label for="setPassword">Set password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="setPassword" name="userpassword" placeholder="************" required >
+                    </div>
+                    <br>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="***********" required >
+                    </div>
+                    <br>
+                    <center><button type="submit" class="btn btn-primary">Register</button></center>
+                </form>
+                <br>
+                <center>
+                    <p>Or have an account <a href="./login.html">Login</a></p>
+                </center>
+            </div>
+        </div><br><br>
+    </div>
+</body>
+<script src="./assets/js/general.js"></script>
+<script src="./assets/js/registerhandler.js"></script>
+</html>

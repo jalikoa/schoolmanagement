@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JalSoft Results Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-controls {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        #prevPage, #nextPage {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #addRow {
+            background-color: #17A2B8;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #saveButton {
+            background-color: #28A745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #resultsTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #resultsTable th, #resultsTable td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #resultsTable th {
+            background-color: #f2f2f2;
+        }
+
+        .editable {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Teacher Results Management</h1>
+        </header>
+        <div class="table-controls">
+            <button id="prevPage">Previous</button>
+            <button id="nextPage">Next</button>
+            <button id="addRow">Add New Row</button>
+            <span id="pageInfo">Page 1</span>
+        </div>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Result</th>
+                    <th>Pass/Fail</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be populated by JavaScript -->
+                <tr>
+                    <td contenteditable="true" class="editable">S001</td>
+                    <td contenteditable="true" class="editable">John Doe</td>
+                    <td contenteditable="true" class="editable">Math</td>
+                    <td contenteditable="true" class="editable">A</td>
+                    <td contenteditable="true" class="editable">Pass</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer">
+            <button id="saveButton">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const results = [
+                { id: 'S001', name: 'John Doe', subject: 'Math', result: 'A', passFail: 'Pass' },
+                { id: 'S002', name: 'Jane Smith', subject: 'Science', result: 'B', passFail: 'Pass' },
+                // Add more results as needed
+            ];
+
+            let currentPage = 1;
+            const resultsPerPage = 5;
+
+            function renderTable(page) {
+                const tableBody = document.querySelector('#resultsTable tbody');
+                tableBody.innerHTML = '';
+
+                const start = (page - 1) * resultsPerPage;
+                const end = Math.min(start + resultsPerPage, results.length);
+
+                for (let i = start; i < end; i++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td contenteditable="true" class="editable">${results[i].id}</td>
+                        <td contenteditable="true" class="editable">${results[i].name}</td>
+                        <td contenteditable="true" class="editable">${results[i].subject}</td>
+                        <td contenteditable="true" class="editable">${results[i].result}</td>
+                        <td contenteditable="true" class="editable">${results[i].passFail}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+
+                document.getElementById('pageInfo').textContent = `Page ${page}`;
+            }
+
+            function handleKeyboardShortcuts(event) {
+                const focusedElement = document.activeElement;
+
+                if (event.ctrlKey && event.key === '/') {
+                    // Focus the first editable cell of the last row
+                    const lastCell = document.querySelector('#resultsTable tbody tr:last-child td:first-child');
+                    lastCell.focus();
+                }
+                
+                if (event.ctrlKey && event.key === 's') {
+                    // Trigger save button click
+                    document.getElementById('saveButton').click();
+                }
+
+                if (event.key === 'Tab') {
+                    // Move to the next editable cell
+                    if (focusedElement.classList.contains('editable')) {
+                        let nextElement = focusedElement.nextElementSibling;
+                        if (!nextElement) {
+                            const row = focusedElement.parentElement;
+                            nextElement = row.nextElementSibling ? row.nextElementSibling.cells[0] : null;
+                        }
+                        if (nextElement) {
+                            nextElement.focus();
+                            event.preventDefault();
+                        }
+                    }   
+                }
+                if (event.ctrlKey && event.key === '.') {
+                    document.getElementById('addRow').click();
+                }
+
+            }
+
+            document.getElementById('prevPage').addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable(currentPage);
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', function() {
+                if (currentPage < Math.ceil(results.length / resultsPerPage)) {
+                    currentPage++;
+                    renderTable(currentPage);
+                }
+            });
+
+            document.getElementById('addRow').addEventListener('click', function() {
+                const tableBody = document.querySelector('#resultsTable tbody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td contenteditable="true" class="editable"></td>
+                    <td contenteditable="true" class="editable"></td>
+                    <td contenteditable="true" class="editable"></td>
+                    <td contenteditable="true" class="editable"></td>
+                    <td contenteditable="true" class="editable"></td>
+                `;
+                tableBody.appendChild(newRow);
+                newRow.querySelector('td:first-child').focus();
+            });
+
+            document.getElementById('saveButton').addEventListener('click', function() {
+                alert('Changes saved!'); // Implement your save functionality here
+            });
+
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+
+            renderTable(currentPage);
+        });
+    </script>
+</body>
+</html>

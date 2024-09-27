@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart website</title>
+</head>
+<body>
+   <canvas id="myChart"></canvas> 
+</body>
+<script src="./assets/js/chart.js"></script>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+            label: 'Sales Over Time',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Monthly Sales Data',
+                font: {
+                    size: 18
+                }
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+</html>
