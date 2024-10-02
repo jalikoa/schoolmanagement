@@ -1,6 +1,3 @@
-
-const inputModal = document.getElementById('modal-modal');
-const inputModalContainer = document.getElementById('modal-container');
 function editProfile(){
     const username = document.getElementById('teacherpronoun');
     const contact = document.getElementById('teacherphone');
@@ -11,7 +8,7 @@ function editProfile(){
         <input type="button" class="delete-btn" onclick="populatemodalAndFill('${username.innerText}','${contact.innerText}','${email.innerText}')" value="Yes">
     </nav>`;
     confirmationPopup.classList.add('alert');
-    confirmationPopup.classList.add('alert-light');
+    confirmationPopup.classList.add('alert-info');
     confirmationPopup.innerHTML = content;
     del();
 }
@@ -58,12 +55,11 @@ function saveEdits(email){
     const userPassword = document.getElementById('editpassword');
     //This a function that is aimed at implementing a mecxhanism of validating the credentials before they are sent to the database however this is ought to be added later there after now it is just made for the purpose of testing the application that it is not implemented 
     // validate(); 
-    const data = `editprofile=${encodeURIComponent('true')}&userid=${encodeURIComponent(document.getElementById('teachersid').value)}&newname=${encodeURIComponent(newName.value)}&newemail=${encodeURIComponent(newEmail.value)}&newphone=${encodeURIComponent(newPhone.value)}&userpassword=${encodeURIComponent(userPassword.value)}`;
+    const data = `editprofile=${encodeURIComponent('true')}&useremail=${encodeURIComponent(email)}&newname=${encodeURIComponent(newName.value)}&newemail=${encodeURIComponent(newEmail.value)}&newphone=${encodeURIComponent(newPhone.value)}&userpassword=${encodeURIComponent(userPassword.value)}`;
     const teachersXhrOne = checkXML();
     teachersXhrOne.open('POST','http://localhost/feeforum/backend/teachersdashboardhandler.php',true);
     teachersXhrOne.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
     teachersXhrOne.onload = ()=>{
-        console.log(teachersXhrOne.responseText);
         if (teachersXhrOne.status === 200){
                 const response = JSON.parse(teachersXhrOne.responseText);
                 cancelEdit();
@@ -94,11 +90,7 @@ function saveEdits(email){
     teachersXhrOne.send(data);
 }
 
-function cancelEdit(){
-    preventDefaultSubmissions();
-    inputModalContainer.classList.remove('input-modal-display');
-    inputModalContainer.classList.add('none');
-}
+
 
 function addNewNotification(){
     inputModal.innerText = '';
@@ -146,12 +138,11 @@ function addNewNotification(){
                 
                 <div class="input-group">
                     <button onclick="saveNotifications()" class="btn btn-primary">Save changes</button>&nbsp;
-                    <button onclick="cancelEdit()" type="button" class="btn btn-info">Cancel</button>
+                    <button onclick="cancelEdit()" class="btn btn-info">Cancel</button>
                 </div>
             </form>`;
             inputModal.innerHTML = editContent;
-    inputModalContainer.classList.remove('none');
-    inputModalContainer.classList.add('input-modal-display');
+    showInputModal();
 }
 function saveNotifications(){
     preventDefaultSubmissions();
@@ -193,90 +184,6 @@ function saveNotifications(){
     }
     teachersXhrTwo.send(data);
 }
-function fetchStudentLists(){
-    const data = `fetchstudentslist=${encodeURIComponent('true')}&teachersemail=${encodeURIComponent(document.getElementById('teacheremail').innerText)}`;
-     const teachersXhrThree = checkXML();
-     teachersXhrThree.open('POST',teacherhandler,true);
-     teachersXhrThree.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-     teachersXhrThree.onload = ()=>{
-        const response = JSON.parse(teachersXhrThree.responseText);
-        //Here you should add some logics here to handle the process th results that are received from the server
-        if (response.success){
-            const teachersStudentsListTable = document.getElementById('teachersStudentsListTable');
-            teachersStudentsListTable.innerHTML = '';
-            document.getElementById('studentssum').innerText = response.list.length;
-            if(document.getElementById('teachersStudentsListTable')){
-                response.list.forEach(student => {
-                    const tr = document.createElement('tr');
-                    const tableContents = ` <td>${student.username}</td>
-                                    <td>${student.useremail}</td>
-                                    <td>${student.userregno}</td>
-                                    <td>${student.usercontact}</td>
-                                    <td><button onclick="teacherDeleteStudent('${student.id}')" class="btn btn-danger">Delete</button></td>`;
-                        tr.innerHTML = tableContents;
-                        teachersStudentsListTable.appendChild(tr);
-                });
-            }
-        } else {
-            const content = `<h5 class="text-danger">${response.message}</h5>
-            <nav id="decisions">
-                <input type="button" class="cancel-btn" onclick="cancelDel()" value="Ok">
-            </nav>`;
-            confirmationPopup.classList.add('alert');
-            confirmationPopup.classList.add('alert-danger');
-            confirmationPopup.innerHTML = content;
-            del();
-        }
-     }
-     teachersXhrThree.send(data);
-     //Here you should add some logics here to handle the process th results that are received from the server
-}
-function teacherDeleteStudent(studentId){
-    const content = `<h5 class="text-primary"> Are you sure you want to delete this students entry?</h5>
-    <nav id="decisions">
-        <input type="button" class="cancel-btn" onclick="cancelDel()" value="cancel">
-        <input type="button" class="delete-btn" onclick="completelyDeleteStudent('${studentId}')" value="Yes">
-    </nav>`;
-    confirmationPopup.classList.add('alert');
-    confirmationPopup.classList.add('alert-info');
-    confirmationPopup.innerHTML = content;
-    del();
-}
-function completelyDeleteStudent(studentId){
-    cancelDel();
-    const data = `deletestudent=${encodeURIComponent('true')}&studentid=${encodeURIComponent(studentId)}`;
-    const teachersXhrFour = checkXML();
-    teachersXhrFour.open('POST',teacherhandler,true);
-    teachersXhrFour.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-    teachersXhrFour.onload = ()=>{
-        console.log(teachersXhrFour.responseText);
-        const response = JSON.parse(teachersXhrFour.responseText);
-        if (response.success){
-            const teachersStudentsListTable = document.getElementById('teachersStudentsListTable');
-            teachersStudentsListTable.innerHTML = '';
-            const content = `<h5 class="text-success">${response.message}</h5>
-            <nav id="decisions">
-                <input type="button" class="cancel-btn" onclick="cancelDel()" value="Ok">
-            </nav>`;
-            confirmationPopup.classList.add('alert');
-            confirmationPopup.classList.add('alert-success');
-            confirmationPopup.innerHTML = content;
-            del();
-            fetchStudentLists();
-        } else {
-            const content = `<h5 class="text-danger">${response.message}</h5>
-            <nav id="decisions">
-                <input type="button" class="cancel-btn" onclick="cancelDel()" value="Ok">
-            </nav>`;
-            confirmationPopup.classList.add('alert');
-            confirmationPopup.classList.add('alert-danger');
-            confirmationPopup.innerHTML = content;
-            del();
-        }
-    }
-    teachersXhrFour.send(data);
-}
-
 function fetchTeacherInformation(){
     const id = document.getElementById('teachersid');
     const username = document.getElementById('teacherpronoun');
@@ -295,7 +202,6 @@ function fetchTeacherInformation(){
             contact.innerText = response.credentials[0].usercontact;
             email.innerText = response.credentials[0].useremail;
             myClass.innerText = response.credentials[0].class;
-            fetchStudentLists();
         } else {
             const content = `<h5 class="text-danger">${response.message}</h5>
             <nav id="decisions">
@@ -310,3 +216,11 @@ function fetchTeacherInformation(){
     teachersXhrFive.send(data);
 }
 fetchTeacherInformation();
+function saveResults(){
+    //get headings
+    //get rows
+    //create table
+    //save to database
+    const tableHeading = document.getElementById('tableHeading');
+    
+}

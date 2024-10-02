@@ -62,16 +62,15 @@ function generatePDF() {
 }
 
 
-function printPersonalStudentReceipt(paymentId){
-    
+function printPersonalStudentReceipt(studentId){
+  const i = getPosition(studentId)
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const logoUrl = 'http://localhost/feeforum/assets/img/logo.png';
-  const balance = getBalance(paymentId);
+  const balance = getBalance(students[i].uid);
 const imgWidth = 40;
 const imgHeight = 30;
-const student = students.find(student => student.paymentId === paymentId);
 doc.addImage(logoUrl, 'PNG', 18, 5, imgWidth, imgHeight);
   doc.setFont('Times','bold');
   doc.setFontSize(20);
@@ -83,7 +82,7 @@ doc.addImage(logoUrl, 'PNG', 18, 5, imgWidth, imgHeight);
   doc.text('Serial: ',150,30);
   doc.setFont('Times','bold')
   doc.setTextColor(255, 0, 128);
-  doc.text(student.paymentId,165,30);
+  doc.text(students[i].uid,165,30);
   doc.setFont('Helvetica','normal');
   doc.setTextColor(0, 102, 255);
   doc.setFontSize(11);
@@ -94,19 +93,19 @@ doc.addImage(logoUrl, 'PNG', 18, 5, imgWidth, imgHeight);
   doc.text('SCHOOL FEES RECEIPT ',63,30);
   doc.setFontSize(14);
   doc.text('Date :',65,37);
-  doc.text(student.paymentDate,84,36.4);
+  doc.text(students[i].datepaid,84,36.4);
   doc.line(79,37,pageWidth-18,37);
   doc.text("Pupil's name:",18,45);
-  doc.text(student.studentName,53,44);
+  doc.text(students[i].name,53,44);
   doc.line(47.5,45,pageWidth-18,45);
   doc.text("Grade :",18,53);
-  doc.text(student.studentClass,37,52);
+  doc.text(students[i].grade,37,52);
   doc.line(35,53,73,53);
   doc.text("Admission no:",75,53);
-  doc.text("P-6394",112,52);
+  doc.text(students[i].payerregno,112,52);
   doc.line(106.8,53,pageWidth-18,53);
   doc.text("The sum of cash(in words):",18,61);
-  doc.text(getWords(`${student.paymentAmount}`),83,60);
+  doc.text(getWords(`${students[i].amountpaid}`),83,60);
   doc.line(78,61,pageWidth-18,61);
   doc.line(18,69,pageWidth-18,69);
 var columns = [
@@ -125,7 +124,7 @@ var rows = [
 { paymentReason: 'Tour', amount: 2672 },
 { paymentReason: 'Medical', amount: 2452 },
 { paymentReason: 'Graduation', amount: 2267 },
-{ paymentReason: 'Total', amount: student.paymentAmount }
+{ paymentReason: 'Total', amount: students[i].amountpaid}
 ];
 doc.autoTable({
 columns: columns,
@@ -155,13 +154,13 @@ columnStyles: { 0: { cellWidth: 10 } },
   doc.setTextColor(39,44,102);
   doc.text('SCHOOL STAMP',145,finalY+46.7);
   doc.addImage(logoUrl, 'PNG', 150, finalY+5, imgWidth, imgHeight);
-  doc.save(student.studentName+"-"+student.studentClass+"-"+student.paymentDate+".pdf");
+  doc.save(students[i].name+"-"+students[i].grade+"-"+students[i].datepaid+".pdf");
 }
 
 function getBalance(paymentId){
   const student = students.find(student => student.paymentId === paymentId);
-  var total = getFullPayment(student.studentClass);
-  var balance = total - student.paymentAmount;
+  var total = getFullPayment(students[i].grade);
+  var balance = total - students[i].amountpaid;
   if (balance <= 0){
     const output = "Nill";
     return output;

@@ -3,7 +3,7 @@
 {
   "name": "JalSoft Fee payment App",
   "short_name": "Jalikoa",
-  "start_url": "/index.html",
+  "start_url": "./index.php",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",

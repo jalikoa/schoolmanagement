@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="./assets/css/style.css">
 <body>
+    <div class="none" id="confirmation-popup">
+        
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
@@ -44,6 +47,17 @@
                     <label for="gender">Your gender</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="gender" name="usergender" placeholder="Male or Female" required >
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="class">Your class</label>
+                        <select id="class" class="form-control" required>
+                            <option value="Primary-1">Primary 1</option>
+                            <option value="Primary-2">Primary 2</option>
+                            <option value="Primary-3">Primary 3</option>
+                            <option value="Primary-4">Primary 4</option>
+                            <option value="Primary-5">Primary 5</option>
+                            </select>
                     </div>
                     <br>
                     <label for="setPassword">Set password</label>

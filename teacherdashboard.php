@@ -1,5 +1,20 @@
-<input type="text" class="none" id="teachersid" value="1" disabled>
-
+<?php
+ session_start();
+ if (!isset($_SESSION['user-id'])){
+  header("location:login.html");
+ } else { 
+    if(isset($_GET["user_id"])){
+        if(!empty($_GET["user_id"])){
+    $userid = $_GET['user_id'];
+    echo "<input type='text' class='none' id='teachersid' value='$userid' disabled>";
+        } else {
+            header("location:login.html"); 
+        }
+    } else {
+        header("location:login.html"); 
+    }
+ }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +110,7 @@
                 <div class="col-xs-11 col-sm-5 col-md-5 col-lg-3 col-xl-3 student-card">
                     <h4 class="text-secondary">Academics</h4>
                     <span class="lead text-muted">Exams Actions</span><br>
-                    <button class="btn btn-success">Record entry</button>&nbsp;<button class="btn btn-primary">Produce results</button><br><br>
+                    <button class="btn btn-success" onclick="window.location.href = './resultsentry.html'">Record entry</button>&nbsp;<button class="btn btn-primary">Produce results</button><br><br>
                     <span class="lead text-muted">Lessons and timetable</span><br>
                     &nbsp;&nbsp;<button class="btn btn-success">Generate</button>&nbsp;<button class="btn btn-primary">My schedule</button><br><br>
                     

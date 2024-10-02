@@ -1,7 +1,7 @@
 const cacheName = 'v1';
 const cacheAssets = [
-  '/',
-  '../../index.html',
+  '../../',
+  '../../index.php',
   '../css/style.css',
   './app.js',
   '../img/logo.png',

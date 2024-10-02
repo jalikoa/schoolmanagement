@@ -3,20 +3,20 @@ include "dbConfig.php";
 function clean_input($data){
     return htmlspecialchars(stripslashes(trim($data)));
 }
-
+// echo password_hash('12qwer',PASSWORD_BCRYPT);
 if (isset($_POST["editprofile"])){
-    $useremail = clean_input($_POST["useremail"]);
+    $userid = clean_input($_POST["userid"]);
     $newname = clean_input($_POST["newname"]);
     $newemail = clean_input($_POST["newemail"]);
     $newphone = clean_input($_POST["newphone"]);
     $userpassword = $conn->real_escape_string($_POST["userpassword"]);
 
-    $sql = "SELECT * FROM teachers WHERE useremail = '$useremail'";
+    $sql = "SELECT * FROM teachers WHERE id = '$userid'";
     $results = $conn->query($sql);
     if ($results){
         $row = $results->fetch_assoc();
         if (password_verify($userpassword,$row["password"])){
-                $sql = "UPDATE teachers SET username = '$newname',useremail = '$newemail',usercontact = '$newphone'";
+                $sql = "UPDATE teachers SET username = '$newname',useremail = '$newemail',usercontact = '$newphone' WHERE id = '$userid'";
                 if ($conn->query($sql)){
                     echo json_encode(["success" => true,"message" => "Profile was succesfully updated"]);
                 }  

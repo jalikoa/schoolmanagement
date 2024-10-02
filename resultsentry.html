@@ -1,31 +1,19 @@
+<input type="text" class="none" id="teachersid" value="1" disabled>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JalSoft Results Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .table-controls {
+    <title>JalSoft school management system teachers results dashboard</title>
+</head>
+<link rel="shortcut icon" href="./assets/img/logo.png" type="image/x-icon">
+<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+<link rel="stylesheet" href="./assets/css/style.css">
+<link rel="stylesheet" href="./assets/css/styles.css">
+<style>
+     .table-controls {
             margin-bottom: 10px;
             text-align: center;
         }
@@ -83,51 +71,111 @@
             text-align: center;
             margin-top: 20px;
         }
-    </style>
-</head>
+</style>
 <body>
-    <div class="container">
-        <header>
-            <h1>Teacher Results Management</h1>
-        </header>
-        <div class="table-controls">
-            <button id="prevPage">Previous</button>
-            <button id="nextPage">Next</button>
-            <button id="addRow">Add New Row</button>
-            <span id="pageInfo">Page 1</span>
-        </div>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>Result</th>
-                    <th>Pass/Fail</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be populated by JavaScript -->
-                <tr>
-                    <td contenteditable="true" class="editable">S001</td>
-                    <td contenteditable="true" class="editable">John Doe</td>
-                    <td contenteditable="true" class="editable">Math</td>
-                    <td contenteditable="true" class="editable">A</td>
-                    <td contenteditable="true" class="editable">Pass</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="footer">
-            <button id="saveButton">Save Changes</button>
-        </div>
+
+
+    <div class="none" id="confirmation-popup">
+        
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+    <div id="mobile-menu-open" class="shadow-large">
+       <i class="fa fa-bars" aria-hidden="true"></i>
+   </div>
+
+   <!-- End #mobile-menu-toggle -->
+   <header>
+       <div id="mobile-menu-close">
+           <span>Close</span> <i class="fa fa-times" aria-hidden="true"></i>
+       </div>
+       <ul id="menu" class="shadow">
+           <li>
+               <a href="#main-content">Payments</a>
+           </li>
+           <li>
+               <a href="#report-section">Reports</a>
+           </li>
+           <li>
+               <a href="#education">Education</a>
+           </li>
+           <li>
+               <a href="#projects">Projects</a>
+           </li>
+           <li>
+               <a href="#skills">Skills</a>
+           </li>
+           <li>
+               <a href="#contact">Contact</a>
+           </li>
+       </ul>
+   </header>
+   <div id="modal-container" class="none">
+       <center>
+            <div class="col-xs col-sm-6 col-md-5 col-lg-3 col-xl-3 student-card" id="modal-modal">
+                <br>
+                <!-----This is the modal where the input fields for doing the specified activity will be populated --------->
+            </div>
+        </center>
+   </div>
+
+    <div class="container">
+        <div class="row">
+                <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                    <img src="./assets/img/logo.png" style="width: 80px;">
+                </div>
+                <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                    <h2 class="text-muted text-primary">Teachers dashboard</h2>
+                </div>  
+                <div class="col-xs-11 col-sm-5 col-md-5 col-lg-4 col-xl-4 student-card">
+                    <h4 class="text-secondary">My bio</h4>
+                    <span class="lead text-info">Name: </span><span class="text-secondary" id="teacherpronoun"></span><br>
+                    <span class="lead text-info">Class: </span><span class="text-secondary" id="teacherclass"></span><br>
+                    <span class="lead text-info">Phone: </span><span class="text-secondary" id="teacherphone"></span><br>
+                    <span class="lead text-info">Email: </span><span class="text-secondary" id="teacheremail"></span><br>
+                    <span class="lead text-info">Total students: </span><span class="lead text-primary" id="studentssum"><b></b></span><br><br>
+                    <button onclick="editProfile()" class="btn btn-primary">Edit profile</button>
+                </div>
+        <div class="row">
+            <div class="table-controls">
+                <button id="prevPage">Previous</button>
+                <button id="nextPage">Next</button>
+                <button id="addRow">Add New Row</button>
+                <span id="pageInfo">Page 1</span>
+            </div>
+            <table id="resultsTable">
+                <thead id="tableHeading">
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Result</th>
+                        <th>Pass/Fail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated by JavaScript -->
+                    <tr>
+                        <td contenteditable="true" class="editable">S001</td>
+                        <td contenteditable="true" class="editable">John Doe</td>
+                        <td contenteditable="true" class="editable">Math</td>
+                        <td contenteditable="true" class="editable">A</td>
+                        <td contenteditable="true" class="editable">Pass</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="footer">
+                <button id="saveButton">Save Changes</button>
+            </div>
+        </div>
+
+    </div>
+    
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
             const results = [
-                { id: 'S001', name: 'John Doe', subject: 'Math', result: 'A', passFail: 'Pass' },
-                { id: 'S002', name: 'Jane Smith', subject: 'Science', result: 'B', passFail: 'Pass' },
-                // Add more results as needed
+                { id: 'LK-3456', name: 'James Murimi', subject: 'Math', result: 'A', passFail: 'Pass' },
+                { id: 'LK-578', name: 'Calvince Owino', subject: 'Science', result: 'B', passFail: 'Pass' },
             ];
 
             let currentPage = 1;
@@ -218,13 +266,15 @@
             });
 
             document.getElementById('saveButton').addEventListener('click', function() {
-                alert('Changes saved!'); // Implement your save functionality here
+                saveResults();
             });
 
             document.addEventListener('keydown', handleKeyboardShortcuts);
 
             renderTable(currentPage);
         });
-    </script>
-</body>
+        //
+</script>
+<script src="./assets/js/general.js"></script>
+<script src="./assets/js/resultentryhandler.js"></script>
 </html>

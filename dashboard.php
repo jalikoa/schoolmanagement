@@ -2,9 +2,26 @@
  session_start();
 if (!isset($_SESSION['user_id'])){
  header("location:login.html");
-}
-$userid = $_SESSION['user_id'];
-echo "<input style='display:none;' id='userId' value='$userid' disabled>";
+} else { 
+    if(isset($_GET["user_id"])){
+        if(!empty($_GET["user_id"])){
+    $userid = $_GET['user_id'];
+    include "./backend/dbConfig.php";
+    $sql = "SELECT * FROM students WHERE id = '$userid'";
+    $results = $conn->query($sql);
+    if ($results->num_rows > 0){
+        echo "<input style='display:none;' id='userId' value='$userid' disabled>";
+    }  else {
+        header("location:login.html"); 
+    }
+    echo "<input style='display:none;' id='userId' value='$userid' disabled>";
+        } else {
+            header("location:login.html"); 
+        }
+    } else {
+        header("location:login.html"); 
+    }
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +70,7 @@ echo "<input style='display:none;' id='userId' value='$userid' disabled>";
        </header>
    
     <div class="container">
-        <div class="row">
+        <div class="row mb-4 me-1 ms-1">
             <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
                 <img src="./assets/img/logo.png" style="width: 80px;">
             </div>
@@ -96,9 +113,12 @@ echo "<input style='display:none;' id='userId' value='$userid' disabled>";
                 <span class="text-info lead">Remarks: </span><span class="text-primary" id="classteacherremarks">Good job.Keep it up</span><br>
                 <button class="btn btn-success">Get slip</button>
             </div>
+            <div class="clearfix sr-only"></div>
             <div class="col-xs-11 col-sm-6 col-md-5 col-lg-4 col-xl-4 student-card">
                 <h5 class="text-warning">Notifications</h5>
-                <div class="alert alert-info">No Notifications available the school will pass notifications through this card</div>
+                <div id="notification-card">
+                    <div class="alert alert-info m-2">No Notifications!</div>
+                </div>
             </div>
         </div>
 

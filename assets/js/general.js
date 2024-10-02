@@ -27,6 +27,27 @@ function del(){
     confirmationPopup.classList.remove('fade');
     }
     confirmationPopup.classList.add('visible');
+    hidePopup();
+}
+function dele(studentid){
+    if (confirmationPopup.classList.contains('none')){
+    confirmationPopup.classList.remove('none');
+    }
+    if (confirmationPopup.classList.contains('fade')){
+    confirmationPopup.classList.remove('fade');
+    }
+    const content = `<h5 class="text-danger">Are you sure you want to delete this entry?</h5>
+                <nav id="decisions">
+                    <input type="button" class="cancel-btn" onclick="cancelDel()" value="No">
+                    <input type="button" class="delete-btn" onclick="permanentlyDeleteStudent(${studentid})" value="Yes">
+                </nav>`;
+                confirmationPopup.classList.add('alert');
+                confirmationPopup.classList.add('alert-light');
+                confirmationPopup.innerHTML = content;
+    confirmationPopup.classList.add('visible');
+}
+function hidePopup(){
+    setTimeout(()=>{cancelDel()},3000);
 }
 function cancelDel(){
     if (confirmationPopup.classList.contains('fade')){
@@ -56,20 +77,3 @@ function delComplete(){
     confirmationPopup.classList.add('fade');
     confirmationPopup.classList.add('none');
 }
-const inputModal = document.getElementById('modal-modal');
-const inputModalContainer = document.getElementById('modal-container');
-function showInputModal(){
-    inputModalContainer.classList.remove('none');
-    inputModalContainer.classList.add('input-modal-display');
-}
-function cancelEdit(){
-    preventDefaultSubmissions();
-    inputModalContainer.classList.remove('input-modal-display');
-    inputModalContainer.classList.add('none');
-}
-window.addEventListener('click',(e)=>{
-    if(e.target == inputModalContainer){
-        inputModalContainer.classList.remove('input-modal-display');
-        inputModalContainer.classList.add('none');
-    }
-})

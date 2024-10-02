@@ -1,17 +1,51 @@
-const students = [];
-
 document.getElementById('addPaymentBtn').addEventListener('click', () => {
     // Open the modal and reset form for new entry
     document.getElementById('paymentModal').style.display = 'flex';
     resetForm();
     document.getElementById('paymentForm').onsubmit = addNewStudent;  // Ensure adding new student
 });
+document.getElementById('addTeacher').addEventListener('click',()=>{
+    const content = ` <div class="container"><div class="row"><div class="col-xs col-sm-10 col-md-8 col-lg-6 col-xl-6">
+        <div class="modal-content">
+            <h2>Add Teacher</h2>
+            <form id="addTeacherForm">
+                <label for="teacherName">Name:</label>
+                <input type="text" class="form-control" id="teacherName" placeholder="Name" required>
+                <br>
+                <label for="teacherEmail">Email:</label>
+                <input type="email" class="form-control" id="teacherEmail" placeholder="Email" required>
+                <br>
+                <label for="teacherClass">Class:</label>
+                <select id="teacherClass" class="form-control" required>
+                    <option value="Primary-1">Primary 1</option>
+                    <option value="Primary-2">Primary 2</option>
+                    <option value="Primary-3">Primary 3</option>
+                    <option value="Primary-4">Primary 4</option>
+                    <option value="Primary-5">Primary 5</option>
+                </select>
+                <br>
+                <br>
+                <label for="teacherPhone">Contact:</label>
+                <input class="form-control" type="tel" id="teacherPhone" placeholder="Phone" required>
+                <br>
+                <label for="teacherPassword">Password:</label>
+                <input class="form-control" type="password" id="teacherPassword" placeholder="Password" required>
+                <br>
+                <center><button type="button" onclick="addNewTeacher()" class="btn btn-success form-control">Add</button></center>
+            </form>
+        </div>
+    </div></div></div>`
+    document.getElementById('AddModal').innerHTML = content;
+    document.getElementById('AddModal').style.display = 'flex';
+
+});
 
 function addNewStudent(event) {
     event.preventDefault();
     const amount = document.getElementById('paymentType').value === 'Full' ? getFullPayment(document.getElementById('studentClass').value) : document.getElementById('paymentAmount').value;
+    console.log(document.getElementById('studentClass').value);
     const uid = generatePaymentID();
-    pushToDatabase(document.getElementById('admno').value,amount,document.getElementById('studentClass').value,document.getElementById('paymentDate').value,uid);
+    pushToDatabase(document.getElementById('admno').value,document.getElementById('studentName').value,amount,document.getElementById('studentClass').value,document.getElementById('paymentDate').value,uid);
 
     updateStudentList();
     document.getElementById('paymentModal').style.display = 'none';
@@ -20,15 +54,15 @@ function addNewStudent(event) {
 
 function getFullPayment(studentClass) {
     switch (studentClass) {
-        case 'Primary 1':
+        case 'Primary-1':
             return 20000;
-        case 'Primary 2':
+        case 'Primary-2':
             return 23000;
-        case 'Primary 3':
+        case 'Primary-3':
             return 25000;
-        case 'Primary 4':
+        case 'Primary-4':
             return 27000;
-        case 'Primary 5':
+        case 'Primary-5':
             return 30000;
         default:
             return 0;
@@ -46,41 +80,44 @@ function resetForm() {
 
 function updateStudentList() {
     fetchAllStudentsFromDataBase();
-    calculateStats();
 }
 
-
-
-function calculateStats() {
-    const totalFees = students.reduce((acc, student) => acc + parseInt(student.paymentAmount), 0);
-    const studentsPaid = students.length;
-    const totalPending = students.filter(student => student.paymentType !== 'Full').length;
-
-    document.getElementById('totalFees').textContent = `${totalFees.toLocaleString()}`;
-    document.getElementById('studentsPaid').textContent = studentsPaid;
-    document.getElementById('totalPending').textContent = totalPending;
+function getPosition(id){
+    for(i = 0;i < students.length;i++){
+        if(students[i].id == id){
+            return i;
+            break;
+        }
+    }
 }
-//To handle delete confirmation popup
+function getPaymentType (id){
+    const i = getPosition(id);
+    const studentClass = students[i].grade;
+    console.log(studentClass);
+    const FullPayment = getFullPayment(studentClass);
 
-//delete functionality 
-function deleteStudent(paymentId){
-    console.log(paymentId);
-    updateStudentList();
+    console.log(FullPayment);
+    if(students[i].amountpaid === FullPayment || students[i].amountpaid > FullPayment ){
+        return 'Full';
+    } 
+    if (students[i].amountpaid < FullPayment){
+        return 'Partial';
+    }
 }
-
 // Edit Functionality
-function editStudent(paymentId) {
-    const student = students.find(student => student.paymentId === paymentId);
-    if (student) {
-        // Populate modal with existing student details
-        document.getElementById('studentName').value = student.studentName;
-        document.getElementById('studentClass').value = student.studentClass;
-        document.getElementById('paymentType').value = student.paymentType;
-        document.getElementById('paymentAmount').value = student.paymentAmount;
-        document.getElementById('paymentDate').value = student.paymentDate;
+function editStudent(studentId) {
+        const i = getPosition(studentId);
+        console.log(students[i]);
+        document.getElementById('admno').value = students[i].payerregno;
+        document.getElementById('studentName').value = students[i].name;
+        document.getElementById('studentClass').value = students[i].grade;
+        document.getElementById('paymentType').value = getPaymentType(studentId);
+        document.getElementById('paymentAmount').value = students[i].amountpaid;
+        document.getElementById('paymentDate').value = students[i].datepaid;
 
         // Handle payment amount disabling
-        if (student.paymentType === 'Full') {
+        console.log(getPaymentType(studentId));
+        if (getPaymentType(studentId) === 'Full') {
             document.getElementById('paymentAmount').disabled = true;
         } else {
             document.getElementById('paymentAmount').disabled = false;
@@ -92,10 +129,9 @@ function editStudent(paymentId) {
         // Modify form submission to update the existing student
         document.getElementById('paymentForm').onsubmit = function(event) {
             event.preventDefault();
-            updateStudent(student);
+            updateStudent(students);
         };
     }
-}
 
 function updateStudent(student) {
     student.studentName = document.getElementById('studentName').value;
@@ -107,6 +143,7 @@ function updateStudent(student) {
     student.paymentDate = document.getElementById('paymentDate').value;
     updateStudentList();
     document.getElementById('paymentModal').style.display = 'none';
+    //Include a function to update the students payment as well in the database 
     resetForm();
 }
 

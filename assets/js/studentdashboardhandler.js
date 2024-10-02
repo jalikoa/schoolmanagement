@@ -14,6 +14,7 @@ async function fetchCredentials(){
    xhr.open('POST','http://localhost/feeforum/backend/studentdashboardhandler.php',true);
    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
    xhr.onload = function(){
+    console.log(xhr.responseText);
      if(xhr.status === 200){
          const response = JSON.parse(xhr.responseText);
          if (response.success){
@@ -37,6 +38,7 @@ async function fetchFeeInformation(){
    feeXhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
    feeXhr.onload = function(){
      if(feeXhr.status === 200){
+        console.log(feeXhr.responseText);
          const response = JSON.parse(feeXhr.responseText);
          if (response.success){
           amountPaid.innerText = response.amountPaid;
@@ -65,5 +67,42 @@ function getFullPayment(studentClass) {
              return 0;
      }
  }
+ function fetchNotification(){
+    const notificationxhr = checkXML();
+    notificationxhr.open('POST','http://localhost/feeforum/backend/studentdashboardhandler.php',true);
+    notificationxhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+    const data = `fetchnot=${encodeURIComponent('true')}`;
+    notificationxhr.onload = ()=>{
+        console.log(notificationxhr.responseText);
+        if(notificationxhr.status === 200){
+            const response = JSON.parse(notificationxhr.responseText);
+            if(response.success){
+                document.getElementById('notification-card').innerHTML = '';
+                response.notifications.forEach(notification => {
+                    const notCard = document.createElement('div');
+                    const notTitle = document.createElement('span');
+                    notTitle.classList.add('fw-bold');
+                    notTitle.classList.add('text-primary');
+                    notTitle.innerText = notification.notificationtitle;
+                    const notText = document.createElement('p');
+                    notText.innerText = notification.notificationmessage;
+                    const notSender = document.createElement('span');
+                    notSender.classList.add('text-primary');
+                    notSender.innerText = notification.notificationsender;
+                    notCard.appendChild(notTitle);
+                    notCard.appendChild(notText);
+                    notCard.appendChild(notSender);
+                    notCard.classList.add('alert');
+                    notCard.classList.add(`alert-${notification.notificationcategory}`);
+                    document.getElementById('notification-card').appendChild(notCard);
+                });
+            }
+        } else {
+            console.log('There was an error parsing the response for you!');
+        }
+    }
+    notificationxhr.send(data);
+ }
+ fetchNotification();
 fetchCredentials();
 fetchFeeInformation();

@@ -7,23 +7,38 @@ function clean_input($data){
 if (isset($_POST['useradmno']) && isset($_POST["userpassword"])){
     $userregno = clean_input($_POST["useradmno"]);
     $userpassowrd = $conn->real_escape_string($_POST["userpassword"]);
-
+    $userRole = clean_input($_POST["userrole"]);
+    if ($userRole == 'student'){
     $sql = "SELECT * FROM students WHERE userregno = '$userregno'";
     $results = $conn->query($sql);
     if ($results->num_rows > 0){
         while($row = $results->fetch_assoc()){
             if (password_verify($userpassowrd,$row['userpassword'])) {
                 $_SESSION['user_id'] = $row['id'];
-                echo json_encode(['success' => true,"message" => "Login successfull welcome"]);
+                echo json_encode(['success' => true,"message" => "Login successfull welcome","rd" => 1,"userid" => $row["id"]]);
             } else {
-                echo json_encode(['success' => false, 'message' => 'Sorry the password provided do not match our records']);
+                echo json_encode(['success' => false, 'message' => 'Incorrect password for this account']);
             }
         }
-    } else {
-        echo json_encode(["success" => false,"message" => "Sorry there was a problem with logging you in. It seems like there is no user with the records provided"]);
+    }}
+elseif ($userRole == 'teacher'){
+    $sql = "SELECT * FROM teachers WHERE useremail = '$userregno'";
+    $results = $conn->query($sql);
+    if ($results->num_rows > 0){
+        while($row = $results->fetch_assoc()){
+            if (password_verify($userpassowrd,$row['password'])) {
+                $_SESSION['user-id'] = $row['id'];
+                echo json_encode(['success' => true,"message" => "Login successfull welcome","rd" => 2,"userid" => $row["id"]]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Incorrect password for this account']);
+            }
+        }
+    }else {
+        echo json_encode(["success" => false,"message" => "Ooops! No user exists with the records provided"]);
+    }}
+    else {
+        echo json_encode(["success" => false,"message" => "User not found.Please choose the right role for yourself.","rd" => 0]);
     }
-} else {
-    echo json_encode(["success" => false,"message" => "There was a prblem while logging you in please make sure that you fill in all the fields in the login form please"]);
 }
 
 ?>
